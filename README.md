@@ -2,10 +2,12 @@
 
 ##
 
-I've done the suggested update to the task and added the http server.
+I've done the suggested update to the task and added the http server, along with unit tests.
 
-To run, you should just be able to `cd cmd && go run .` The defaults in the config will
-start the app on `http://localhost:9001`.
+To run the tests, run `go test ./...` from the root of the repo.
+
+To run the http server, you should just be able to `cd cmd && go run .` The defaults in the 
+config will start the app on `http://localhost:9001`.
 
 Of course in production we'd deploy this as a docker image.
 
