@@ -25,35 +25,40 @@ Expected output:
 
 ```json
 {
-  "0af3a961-5146-46b5-93f8-95c0ab687007": {
-    "id": "0af3a961-5146-46b5-93f8-95c0ab687007",
-    "full_name": "Anthony Swiss-Jones",
-    "email": "anthony.swiss@test.com",
-    "badge_count": {
-      "blue": 3,
-      "green": 2,
-      "red": 1
-    }
-  },
-  "6c5031e7-ff1c-4986-ac27-05a2737cd2f4": {
-    "id": "6c5031e7-ff1c-4986-ac27-05a2737cd2f4",
-    "full_name": "Neves Firmino",
-    "email": "neves.firmino@test.com",
-    "badge_count": {
-      "blue": 8,
-      "green": 1,
-      "red": 5
-    }
-  },
-  "d60f3e10-b707-4c76-b165-da38b95aa4b9": {
-    "id": "d60f3e10-b707-4c76-b165-da38b95aa4b9",
-    "full_name": "Rosetta Brandon",
-    "email": "rbrandon@test.com",
-    "badge_count": {
-      "blue": 6,
-      "red": 4
-    }
-  }
+    "users": [
+        {
+            "id": "0af3a961-5146-46b5-93f8-95c0ab687007",
+            "full_name": "Anthony Swiss-Jones",
+            "email": "anthony.swiss@test.com",
+            "badge_count": {
+                "blue": 3,
+                "green": 2,
+                "red": 1
+            },
+            "badge_status": "amazing"
+        },
+        {
+            "id": "6c5031e7-ff1c-4986-ac27-05a2737cd2f4",
+            "full_name": "Neves Firmino",
+            "email": "neves88@test.com",
+            "badge_count": {
+                "blue": 8,
+                "green": 1,
+                "red": 5
+            },
+            "badge_status": "ultimate"
+        },
+        {
+            "id": "d60f3e10-b707-4c76-b165-da38b95aa4b9",
+            "full_name": "Rosetta Brandon",
+            "email": "rbrandon@test.com",
+            "badge_count": {
+                "blue": 6,
+                "red": 4
+            },
+            "badge_status": "ultimate"
+        }
+    ]
 }
 ```
 

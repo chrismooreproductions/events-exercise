@@ -17,25 +17,25 @@ type StreamProcessor interface {
 	Result() map[string]*User
 }
 
-type badgeStatus string
-type badgeColour string
+type BadgeStatus string
+type BadgeColour string
 
 const (
-	great    badgeStatus = "great"
-	amazing  badgeStatus = "amazing"
-	ultimate badgeStatus = "ultimate"
-	champion badgeStatus = "champion"
+	great    BadgeStatus = "great"
+	amazing  BadgeStatus = "amazing"
+	ultimate BadgeStatus = "ultimate"
+	champion BadgeStatus = "champion"
 
-	blue  badgeColour = "blue"
-	red   badgeColour = "red"
-	green badgeColour = "green"
+	blue  BadgeColour = "blue"
+	red   BadgeColour = "red"
+	green BadgeColour = "green"
 )
 
 type User struct {
 	Id         string              `json:"id"`
 	FullName   string              `json:"full_name"`
 	Email      string              `json:"email"`
-	BadgeCount map[badgeColour]int `json:"badge_count"`
+	BadgeCount map[BadgeColour]int `json:"badge_count"`
 }
 
 // streamProcessor is an implementation of the StreamProcessor interface
@@ -45,7 +45,7 @@ type streamProcessor struct {
 	accounts map[string]*User
 }
 
-func toBC(bc accounts.BadgeColour) badgeColour {
+func toBC(bc accounts.BadgeColour) BadgeColour {
 	switch bc {
 	case accounts.BadgeColour_BLUE:
 		return blue
@@ -60,7 +60,7 @@ func toBC(bc accounts.BadgeColour) badgeColour {
 
 func newUserWithBadgeCount(bc accounts.BadgeColour, count int) *User {
 	return &User{
-		BadgeCount: map[badgeColour]int{
+		BadgeCount: map[BadgeColour]int{
 			toBC(bc): count,
 		},
 	}
@@ -72,7 +72,7 @@ func (u *User) String() string {
 }
 
 // badge status determined by the badge status requirements.
-func (u *User) BadgeStatus() badgeStatus {
+func (u *User) BadgeStatus() BadgeStatus {
 	greenCnt := u.BadgeCount[green]
 	blueCnt := u.BadgeCount[blue]
 	redCnt := u.BadgeCount[red]
@@ -136,13 +136,13 @@ func (s *streamProcessor) processUserAccountCreatedEvent(event *accounts.UserAcc
 	if !ok {
 		s.accounts[event.UserId] = &User{
 			Id:         event.UserId,
-			BadgeCount: map[badgeColour]int{},
+			BadgeCount: map[BadgeColour]int{},
 		}
 		return nil
 	}
 	u.Id = event.UserId
 	if u.BadgeCount == nil {
-		u.BadgeCount = map[badgeColour]int{}
+		u.BadgeCount = map[BadgeColour]int{}
 	}
 	return nil
 }
@@ -159,7 +159,7 @@ func (s *streamProcessor) processUserAccountUpdatedEvent(event *accounts.UserAcc
 			Id:         event.UserId,
 			FullName:   event.FullName,
 			Email:      event.Email,
-			BadgeCount: map[badgeColour]int{},
+			BadgeCount: map[BadgeColour]int{},
 		}
 		return nil
 	}
