@@ -1,32 +1,71 @@
 package events
 
-import "events-exercise/internal/accounts"
+import (
+	"events-exercise/internal/accounts"
+	"log/slog"
+)
 
-// StreamReader is an interface that allows a client to read events from a stream.
 type StreamReader interface {
-
-	// Read reads an event at a time from the stream.
-	Read(any) error
+	Read() error
 }
 
-// Stream provides access to a stream of events through the use of a StreamReader.
-type Stream struct{}
+// This is the original Stream struct, updated to provide a more idiomatic way of providing
+// the processor (using the StreamProcessor interface).
 
-// Read reads events from the stream and passes them to the given StreamReader.
-func (s *Stream) Read(sr StreamReader) error {
+// I would suggest this is a preferrential pattern to passing the StreamProcessor directly
+// to the Read() method.
+type streamReader struct {
+	logger *slog.Logger
 
-	for _, event := range s.eventSequence() {
-		err := sr.Read(event)
-		if err != nil {
-			return err
-		}
+	processor StreamProcessor
+}
+
+// NewStreamReader returns a new StreamReader.
+
+// Again, this is the idiomatic way to new up a struct of a given type.
+func NewStreamReader(p StreamProcessor, l *slog.Logger) {
+	sr := &streamReader{processor: p, logger: l}
+
+	numReaders := 3
+	evtChan := make(chan any, numReaders)
+
+	for i := 0; i < numReaders; i++ {
+		go sr.Read(evtChan)
 	}
 
-	return nil
+	for _, evt := range eventSequence() {
+		evtChan <- evt
+	}
+	close(evtChan)
+}
+
+// Read reads events from the stream and processes them via the StreamProcessor.
+
+// In the original task it was really confusing having a Reader interface reading
+// something within another Reader interface.
+
+// i.e.
+// func (s *StreamReader) Read() error {
+//   ...
+//     err := Read()
+// }
+// is something we should not do.
+
+// We should call the processor a processor because that's what it is - this is the
+// Reader, and it offloads events to the Processor for processing correctly.
+
+// This looks a lot nicer to me. The candidate could be presented with the StreamProcessor
+// interface and asked to implement it, and we can stub it for them in `processor.go`.
+func (s *streamReader) Read(ch <-chan any) {
+	for evt := range ch {
+		if err := s.processor.Process(evt); err != nil {
+			s.logger.Error("processing event", "event", evt)
+		}
+	}
 }
 
 // eventSequence returns a sequence of hard-coded events.
-func (s *Stream) eventSequence() []any {
+func eventSequence() []any {
 	return []any{
 		accounts.UserAccountCreatedEvent{
 			UserId: "0af3a961-5146-46b5-93f8-95c0ab687007",
